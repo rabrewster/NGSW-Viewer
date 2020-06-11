@@ -1,5 +1,5 @@
 #include "GemmApp.h"
-#include "MainFrame.h"
+#include "GemmMainFrame.h"
 
 // Create a new application object: this macro will allow wxWindows to create
 // the application object during program execution (it's better than using a
@@ -14,7 +14,7 @@ bool GemmApp::OnInit()
     // create the main application window
     wxPoint initialLocation = wxPoint(50, 50);
     wxSize initialSize = wxSize(900, 600);
-    MainFrame* frame = new MainFrame(_T("GEMM"), initialLocation, initialSize);
+    GemmMainFrame* frame = new GemmMainFrame(_T("GEMM"), initialLocation, initialSize);
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)

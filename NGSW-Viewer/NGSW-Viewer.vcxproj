@@ -147,13 +147,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GemmApp.cpp" />
-    <ClCompile Include="MainFrame.cpp" />
+    <ClCompile Include="GemmVisPanel.cpp" />
+    <ClCompile Include="GemmMainFrame.cpp" />
     <ClCompile Include="STAR3ShellModel.cpp" />
     <ClCompile Include="wxVTKRenderWindowInteractor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GemmApp.h" />
-    <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="GemmVisPanel.h" />
+    <ClInclude Include="GemmMainFrame.h" />
     <ClInclude Include="STAR3ShellModel.h" />
     <ClInclude Include="wxVTKRenderWindowInteractor.h" />
   </ItemGroup>

@@ -21,10 +21,13 @@
     <ClCompile Include="STAR3ShellModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainFrame.cpp">
+    <ClCompile Include="GemmApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GemmApp.cpp">
+    <ClCompile Include="GemmVisPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GemmMainFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,10 +38,13 @@
     <ClInclude Include="STAR3ShellModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MainFrame.h">
+    <ClInclude Include="GemmApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GemmApp.h">
+    <ClInclude Include="GemmVisPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GemmMainFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
