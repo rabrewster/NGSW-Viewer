@@ -34,7 +34,6 @@ class GemmVisPanel : public wxPanel
 {
 public:
     // constructor(s)
-    GemmVisPanel();
     GemmVisPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size);
     ~GemmVisPanel();
 
@@ -60,10 +59,6 @@ private:
     wxVTKRenderWindowInteractor* renderWindowInteractor;
     vtkSmartPointer<vtkRenderer> renderer;
     vtkSmartPointer<vtkRenderWindow> renderWindow;
-
-//private:
-//    // any class wishing to process wxWindows events must use this macro
-//    wxDECLARE_EVENT_TABLE();
 };
 
 #endif

@@ -89,8 +89,8 @@ void GemmVisPanel::newVessel()
         model = new STAR3ShellModel(vrtFileName, celFileName);
 
         renderer->AddActor(model->GetActor());
-        //        pRenderer->ResetCamera();
-        //        pRenderer->GetRenderWindow()->Render();
+        //        renderer->ResetCamera();
+        //        renderer->GetRenderWindow()->Render();
         //        statusBar()->message(tr("Vessel file reads completed"), 2000);
     }
     else

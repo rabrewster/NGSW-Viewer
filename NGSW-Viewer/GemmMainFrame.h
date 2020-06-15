@@ -10,7 +10,9 @@
 #include "wx/wx.h"
 #endif
 
-//#include "wxVTKRenderWindowInteractor.h"
+#include <wx/aui/aui.h>
+
+#include "wxVTKRenderWindowInteractor.h"
 //#include "vtkCamera.h"
 //#include "vtkRenderer.h"
 //#include "vtkRenderWindow.h"
@@ -53,8 +55,13 @@ protected:
 
 private:
     GemmVisPanel* visPanel;
+    wxAuiManager m_mgr;
+    wxVTKRenderWindowInteractor* renderWindowInteractor;
+    vtkSmartPointer<vtkRenderer> renderer;
+    vtkSmartPointer<vtkRenderWindow> renderWindow;
+
     //void newFile();
-    //void newVessel();
+    void newVessel();
     //void eraseVessel();
     //void activateVessel();
     //void deactivateVessel();
@@ -78,7 +85,6 @@ private:
     //vtkSmartPointer<vtkActor> pConeActor;
     //vtkSmartPointer<vtkConeSource> pConeSource;
 
-private:
     // any class wishing to process wxWindows events must use this macro
     wxDECLARE_EVENT_TABLE();
 };
