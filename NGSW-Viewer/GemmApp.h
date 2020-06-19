@@ -1,3 +1,8 @@
+#pragma once
+
+#ifndef GEMMAPP_H
+#define GEMMAPP_H
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
@@ -16,4 +21,4 @@ public:
     // error return: if OnInit() returns false, the application terminates)
     virtual bool OnInit();
 };
-
+#endif

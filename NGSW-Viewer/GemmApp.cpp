@@ -14,7 +14,7 @@ bool GemmApp::OnInit()
     // create the main application window
     wxPoint initialLocation = wxPoint(50, 50);
     wxSize initialSize = wxSize(900, 600);
-    GemmMainFrame* frame = new GemmMainFrame(_T("GEMM"), initialLocation, initialSize);
+    GemmMainFrame *frame = new GemmMainFrame(this, _T("GEMM"), initialLocation, initialSize);
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)

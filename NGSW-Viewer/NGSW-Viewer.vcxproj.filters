@@ -18,16 +18,16 @@
     <ClCompile Include="wxVTKRenderWindowInteractor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="STAR3ShellModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GemmApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GemmVisPanel.cpp">
+    <ClCompile Include="GemmMainFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GemmMainFrame.cpp">
+    <ClCompile Include="GemmSurfaceMeshReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GemmProstar3SurfaceMeshReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,16 +35,16 @@
     <ClInclude Include="wxVTKRenderWindowInteractor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="STAR3ShellModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GemmApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GemmVisPanel.h">
+    <ClInclude Include="GemmMainFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GemmMainFrame.h">
+    <ClInclude Include="GemmSurfaceMeshReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GemmProstar3SurfaceMeshReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

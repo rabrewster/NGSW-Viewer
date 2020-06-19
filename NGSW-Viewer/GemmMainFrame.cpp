@@ -1,8 +1,8 @@
-//#include <vtkRenderer.h>
-//#include <vtkRenderWindow.h>
-
+#include <iostream>
+#include <string>
 #include "GemmMainFrame.h"
-#include "STAR3ShellModel.h"
+#include "GemmSurfaceMeshReader.h"
+#include "GemmProstar3SurfaceMeshReader.h"
 
 // IDs for the controls and the menu commands
 enum
@@ -20,18 +20,17 @@ enum
 // handlers) which process them. It can be also done at run-time, but for the
 // simple menu events like this the static method is much simpler.
 wxBEGIN_EVENT_TABLE(GemmMainFrame, wxFrame)
-EVT_MENU(Minimal_Quit, GemmMainFrame::OnQuit)
-EVT_MENU(Minimal_About, GemmMainFrame::OnAbout)
-EVT_MENU(Minimal_About_VTK, GemmMainFrame::OnAboutVTK)
-EVT_SIZE(GemmMainFrame::OnSize)
+EVT_MENU(Minimal_Quit, GemmMainFrame::onQuit)
+EVT_MENU(Minimal_About, GemmMainFrame::onAbout)
+EVT_MENU(Minimal_About_VTK, GemmMainFrame::onAboutVTK)
 wxEND_EVENT_TABLE();
 
 // frame constructor
-GemmMainFrame::GemmMainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
-    : wxFrame(nullptr, wxID_ANY, title, pos, size)
+GemmMainFrame::GemmMainFrame(GemmApp* app, const wxString& title, const wxPoint& pos, 
+    const wxSize& size) : wxFrame(nullptr, wxID_ANY, title, pos, size)
 {
     // notify wxAUI which frame to use
-    m_mgr.SetManagedWindow(this);
+    wxAuiMgr.SetManagedWindow(this);
 
 #ifdef __WXMAC__
     // we need this in order to allow the about menu relocation, since ABOUT is
@@ -66,10 +65,7 @@ GemmMainFrame::GemmMainFrame(const wxString& title, const wxPoint& pos, const wx
     SetStatusText(_T("Cursor coordinates here (wxWidgets 3.1.3)"));
 #endif // wxUSE_STATUSBAR
 
-    // Create visualization panel and add to frame
-    //visPanel = new GemmVisPanel(this, this->GetPosition(), this->GetSize());
-
-    // create several text controls
+    // create several widgets
     wxTextCtrl* text1 = new wxTextCtrl(this, -1, _("Pane 1 - sample text"),
         wxDefaultPosition, wxSize(200, 150),
         wxNO_BORDER | wxTE_MULTILINE);
@@ -77,10 +73,6 @@ GemmMainFrame::GemmMainFrame(const wxString& title, const wxPoint& pos, const wx
     wxTextCtrl* text2 = new wxTextCtrl(this, -1, _("Pane 2 - sample text"),
         wxDefaultPosition, wxSize(200, 150),
         wxNO_BORDER | wxTE_MULTILINE);
-
-    //wxTextCtrl* text3 = new wxTextCtrl(this, -1, _("Main content window"),
-    //    wxDefaultPosition, wxSize(200, 150),
-    //    wxNO_BORDER | wxTE_MULTILINE);
 
     wxSize initialSize = wxSize(720, 480);
     wxPoint initialLocation = wxPoint(0, 0);
@@ -93,41 +85,43 @@ GemmMainFrame::GemmMainFrame(const wxString& title, const wxPoint& pos, const wx
     renderWindow->SetSize(1000, 1000);
     renderWindow->AddRenderer(renderer);
     // read in geometry and set renderer
-    newVessel();
+    //newVessel();
     // configure renderer
     renderer->GradientBackgroundOff();
     renderer->SetBackground(0.75, 0.75, 0.75);
     renderer->SetBackground(0, 0, 0.75);
 
     // add the panes to the manager
-    m_mgr.AddPane(text1, wxLEFT, wxT("Pane Number One"));
-    m_mgr.AddPane(text2, wxBOTTOM, wxT("Pane Number Two"));
-    //m_mgr.AddPane(visPanel, wxCENTER, wxT("Vis Pane"));
-    m_mgr.AddPane(renderWindowInteractor, wxCENTER, wxT("Vis Pane"));
+    wxAuiMgr.AddPane(text1, wxLEFT, wxT("Pane Number One"));
+    wxAuiMgr.AddPane(text2, wxBOTTOM, wxT("Pane Number Two"));
+    wxAuiMgr.AddPane(renderWindowInteractor, wxCENTER, wxT("Vis Pane"));
+
+    std::string vrtFileName = "C:/Users/racbr/Documents/Northrop Grumman/NG-SHIPWAVE/Models/lancs.vrt";
+    std::string celFileName = "C:/Users/racbr/Documents/Northrop Grumman/NG-SHIPWAVE/Models/lancs.cel";
+    GemmProstar3SurfaceMeshReader* gsmr1 = new GemmProstar3SurfaceMeshReader(this, vrtFileName, celFileName);
+    text2->AppendText(" is here " + std::to_string((int)gsmr1->getGemmSurfaceMeshReaderType()));
+    gsmr1->render(renderer);
 
     // tell the manager to "commit" all the changes just made
-    m_mgr.Update();
-
+    wxAuiMgr.Update();
 }
 
 GemmMainFrame::~GemmMainFrame()
 {
-    delete visPanel;
     // deinitialize the frame manager
-    m_mgr.UnInit();
-
+    wxAuiMgr.UnInit();
 }
 
 //
 // event handlers:
 //
-void GemmMainFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
+void GemmMainFrame::onQuit(wxCommandEvent& WXUNUSED(event))
 {
     // TRUE is to force the frame to close
     Close(TRUE);
 }
 
-void GemmMainFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
+void GemmMainFrame::onAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxString msg;
     msg.Printf(_T("This is GEMM 2020 written by Bob Brewster.It is written in C++"
@@ -135,7 +129,7 @@ void GemmMainFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
     wxMessageBox(msg, _T("About GEMM"), wxOK | wxICON_INFORMATION, this);
 }
 
-void GemmMainFrame::OnAboutVTK(wxCommandEvent& WXUNUSED(event))
+void GemmMainFrame::onAboutVTK(wxCommandEvent& WXUNUSED(event))
 {
     wxString msg;
     msg.Printf(_T("GEMM 2020 uses VTK version 8.2.0. The Visualization Toolkit (VTK) is "
@@ -145,45 +139,30 @@ void GemmMainFrame::OnAboutVTK(wxCommandEvent& WXUNUSED(event))
     wxMessageBox(msg, _T("About VTK"), wxOK | wxICON_INFORMATION, this);
 }
 
-void GemmMainFrame::OnSize(wxSizeEvent& WXUNUSED(event))
-{
-    int w, h, width, height;
-    GetClientSize(&w, &h);
-    GetSize(&width, &height);
-    if (visPanel)
-    {
-        vtkSmartPointer<vtkRenderWindow> renderWindow = visPanel->GetRenderWindow();
-        // if the size changed tell render window
-        if (w != width || h != height)
-        {
-            // adjust our (vtkRenderWindowInteractor size)
-            width = w;
-            height = h;
-            // and our RenderWindow's size
-            renderWindow->SetSize(w, h);
-#if defined(__WXMSW__)
-            this->Refresh();
-#endif //__WXMSW__
-        }
-    }
-}
+//const vtkSmartPointer<vtkRenderer> GemmMainFrame::getRenderer() const
+//{
+//    return renderer;
+//}
 
-void GemmMainFrame::newVessel()
-{
-    std::string vrtFileName = "C:/Users/racbr/Documents/Northrop Grumman/NG-SHIPWAVE/Models/lancs.vrt";
-    std::string celFileName = "C:/Users/racbr/Documents/Northrop Grumman/NG-SHIPWAVE/Models/lancs.cel";
-
-    if ((!vrtFileName.empty()) && (!celFileName.empty()))
-    {
-        STAR3ShellModel* model = new STAR3ShellModel(vrtFileName, celFileName);
-
-        renderer->AddActor(model->GetActor());
-        //        renderer->ResetCamera();
-        //        renderer->GetRenderWindow()->Render();
-        //        statusBar()->message(tr("Vessel file reads completed"), 2000);
-    }
-    else
-    {
-        //        statusBar()->message(tr("Vessel file reads canceled"), 2000);
-    }
-}
+//void GemmMainFrame::newVessel()
+//{
+//    std::string vrtFileName = "C:/Users/racbr/Documents/Northrop Grumman/NG-SHIPWAVE/Models/lancs.vrt";
+//    std::string celFileName = "C:/Users/racbr/Documents/Northrop Grumman/NG-SHIPWAVE/Models/lancs.cel";
+//
+//    if ((!vrtFileName.empty()) && (!celFileName.empty()))
+//    {
+//        GemmProstar3SurfaceMeshReader* model = new GemmProstar3SurfaceMeshReader(this, vrtFileName, celFileName);
+//
+//        renderer->AddActor(model->getActor());
+//        renderer->ResetCamera();
+//#if wxUSE_STATUSBAR
+//        this->GetStatusBar()->SetStatusText(_T("Vessel file reads completed"));
+//#endif // wxUSE_STATUSBAR
+//    }
+//    else
+//    {
+//#if wxUSE_STATUSBAR
+//        this->GetStatusBar()->SetStatusText(_T("Vessel file reads canceled"));
+//#endif // wxUSE_STATUSBAR
+//    }
+//}

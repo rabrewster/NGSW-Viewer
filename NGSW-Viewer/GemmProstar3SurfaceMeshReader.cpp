@@ -8,73 +8,77 @@
 #include <vtkPolyData.h>
 #include <vtkPolyDataMapper.h>
 
-#include "STAR3ShellModel.h"
+#include "GemmProstar3SurfaceMeshReader.h"
 
 //using namespace std;
 
-STAR3ShellModel::STAR3ShellModel(const std::string& vrtFileName, const std::string& celFileName)
+GemmProstar3SurfaceMeshReader::GemmProstar3SurfaceMeshReader(GemmMainFrame* frame, const std::string& vrtFileName, const std::string& celFileName)
+    : GemmSurfaceMeshReader(frame, GemmSurfaceMeshReader::GemmSurfaceMeshReaderType::PROSTAR3)
 {
-    readSTARVertices(vrtFileName, &VertexMap, &VertexPoints);
-    nv = VertexPoints->GetNumberOfPoints();
-    readSTARCells(celFileName, VertexMap, nv, &CellDefs);
-    nc = CellDefs->GetNumberOfCells();
+    readSTARVertices(vrtFileName, &vertexMap, &vertexPoints);
+    nv = vertexPoints->GetNumberOfPoints();
+    readSTARCells(celFileName, vertexMap, nv, &cellDefs);
+    nc = cellDefs->GetNumberOfCells();
     activated = true;
 
     polydata = vtkPolyData::New();
-    polydata->SetPoints(VertexPoints);
-    polydata->SetPolys(CellDefs);
+    polydata->SetPoints(vertexPoints);
+    polydata->SetPolys(cellDefs);
 
     mapper = vtkPolyDataMapper::New();
     mapper->SetInputData(polydata);
 
     actor = vtkActor::New();
     actor->SetMapper(mapper);
+
+    //getGemmMainFrame()->getRenderer()->AddActor(actor);
+    //getGemmMainFrame()->getRenderer()->ResetCamera();
 }
 
 
-void STAR3ShellModel::SetActivated(bool status)
+void GemmProstar3SurfaceMeshReader::setActivated(bool status)
 {
     activated = status;
 }
 
 
-int STAR3ShellModel::GetNumberOfVertices()
+int GemmProstar3SurfaceMeshReader::getNumberOfVertices()
 {
     return nv;
 }
 
 
-int STAR3ShellModel::GetNumberOfCells()
+int GemmProstar3SurfaceMeshReader::getNumberOfCells()
 {
     return nc;
 }
 
 
-int* STAR3ShellModel::GetVertexMap()
+int* GemmProstar3SurfaceMeshReader::getVertexMap()
 {
-    return VertexMap;
+    return vertexMap;
 }
 
 
-vtkPoints* STAR3ShellModel::GetVertexPoints()
+vtkPoints* GemmProstar3SurfaceMeshReader::getVertexPoints()
 {
-    return VertexPoints;
+    return vertexPoints;
 }
 
 
-vtkCellArray* STAR3ShellModel::GetCellDefs()
+vtkCellArray* GemmProstar3SurfaceMeshReader::getCellDefs()
 {
-    return CellDefs;
+    return cellDefs;
 }
 
 
-vtkActor* STAR3ShellModel::GetActor()
+vtkActor* GemmProstar3SurfaceMeshReader::getActor()
 {
     return actor;
 }
 
 
-int STAR3ShellModel::LinearSearch(int value, int* array, int array_size)
+int GemmProstar3SurfaceMeshReader::linearSearch(int value, int* array, int array_size)
 {
     for (int i = 0; i < array_size; i++)
     {
@@ -84,7 +88,7 @@ int STAR3ShellModel::LinearSearch(int value, int* array, int array_size)
 }
 
 
-void STAR3ShellModel::readSTARVertices(const std::string& vrtFileName,
+void GemmProstar3SurfaceMeshReader::readSTARVertices(const std::string& vrtFileName,
     int** vrtMap,
     vtkPoints** vrtPoints)
 {
@@ -132,7 +136,7 @@ void STAR3ShellModel::readSTARVertices(const std::string& vrtFileName,
 }
 
 
-void STAR3ShellModel::readSTARCells(const std::string& celFileName,
+void GemmProstar3SurfaceMeshReader::readSTARCells(const std::string& celFileName,
     int* vrtMap, int NumVerts,
     vtkCellArray** celDefs)
 {
@@ -168,7 +172,7 @@ void STAR3ShellModel::readSTARCells(const std::string& celFileName,
             {
                 std::istringstream istiv(line.substr(start, step));
                 istiv >> ivu[i - 1];
-                ivc[i - 1] = LinearSearch(ivu[i - 1], vrtMap, NumVerts);
+                ivc[i - 1] = linearSearch(ivu[i - 1], vrtMap, NumVerts);
                 (*celDefs)->InsertCellPoint(ivc[i - 1]);
                 start += step;
             }
